@@ -4,5 +4,5 @@ Group(ExampleGroup)
     AddTestUnit(test1) {
         std::cout<<"ExampleGroup"<<std::endl;
     }
-GroupEnd(ExampleGroup)
+GroupEnd
 

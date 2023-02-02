@@ -28,7 +28,7 @@ extern std::string customGroup;  \
 AutoRun(SetGroupName##name,customGroup=#name;allGroups[CurrentGroup].setDescribe(__VA_ARGS__);); \
 namespace name{
 
-#define GroupEnd(name) }AutoRun(UnsetGroup##name,customGroup="");
+#define GroupEnd AutoRun(UnsetGroup##name,customGroup="");};
 
 class GroupTestContext{public:
     size_t idx = 0;

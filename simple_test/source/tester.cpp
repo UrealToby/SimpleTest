@@ -8,13 +8,19 @@
 #include "../include/tester.h"
 #include <chrono>
 #include "../include/assertion.h"
-int main() {
-    for (const auto &group: allGroups) {
-        test_group(group.second);
-    }
+
+#define rewritable  __attribute__((weak))
+
+#define TEST_ALL() \
+rewritable int main() {        \
+    for (const auto &group: allGroups) {        \
+        test_group(group.second);               \
+    }                                           \
 }
 
-void test_group(const TestUnitGroup &group) {
+TEST_ALL()
+
+void rewritable test_group(const TestUnitGroup &group) {
     std::cout << "\033[34mTesting group: " << group.name << "\033[39m" << std::endl;
     if (!group.describe.empty())
         std::cout << "\033[1;37m" << "\"\"\"\n" << group.describe << "\n\"\"\"" << "\033[39m" << std::endl;
@@ -36,7 +42,7 @@ void test_group(const TestUnitGroup &group) {
     std::cout << "\033[1;31m" << state.successCount << "/" << state.count << " Units Passed the Test!\033[39m\n"<<std::endl;
 }
 
-bool test_unit(const TestUnit &unit, GroupTestContext state) {
+bool rewritable test_unit(const TestUnit &unit, GroupTestContext state) {
     std::cout << "[" << state.idx+1 << "/" << state.count << "]: " << "\033[1;34m" << unit.name << "\033[39m";
 
     if (!unit.describe.empty())

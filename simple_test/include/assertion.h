@@ -22,11 +22,11 @@ public:
     [[nodiscard]] const char *what() const noexcept override;
 };
 
-#define EXPECT(stmt, whenErr) \
-context.expectCount+=1;                              \
-if(stmt){}                  \
-else                             \
-    context.expectErrCount+=1,whenErr                     \
+#define EXPECT(stmt, whenErr)           \
+context.expectCount+=1;                 \
+if(stmt){}                              \
+else                                    \
+    context.expectErrCount+=1,whenErr   \
 
 #define EXPECT_COMPARE(left, right, sign) EXPECT((left) sign (right),std::cout << "Assert "<< #left << " " << #sign<< " " << #right << " fail!" << std::endl)
 #define ASSERT_COMPARE(left, right, sign) EXPECT((left) sign (right),throw AssertException(std::string("Assert ")+ #left + " " + #sign+ " " + #right + " fail!"))

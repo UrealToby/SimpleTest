@@ -51,7 +51,7 @@ bool test_unit(const TestUnit &unit, GroupTestContext state) {
     }
     catch (AssertException& e){
         auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-        std::cout << "\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+        std::cout << "\n\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
         return false;
     }
     catch (std::exception& e) {
@@ -59,14 +59,14 @@ bool test_unit(const TestUnit &unit, GroupTestContext state) {
             throw _VA_LIST_DEFINED;
         }
         auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-        std::cout << "\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+        std::cout << "\n\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
 
 
         return false;
     }
     catch (...) {
         auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-        std::cout << "\033[1;31mErr!Unknown exception.\033[39m"<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+        std::cout << "\n\033[1;31mErr!Unknown exception.\033[39m"<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
 
         if (unit.type == UnitType::throwWhenErr) {
             throw _VA_LIST_DEFINED;
@@ -75,7 +75,7 @@ bool test_unit(const TestUnit &unit, GroupTestContext state) {
         return false;
     }
     auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-    std::cout << "\033[1;32mSuccess!";
+    std::cout << "\n\033[1;32mSuccess!";
     if (context.expectErrCount>0){
         std::cout<<"with "<<context.expectErrCount<<" unexpected problems.";
     }

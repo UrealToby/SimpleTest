@@ -2,10 +2,9 @@
 
 #include "../include/simple_test.h"
 
-namespace Group2 {
-    AddTestUnit(Test1) {
-        std::cout << "here is test2" << std::endl;
+Group(ExampleGroup)
+    AddTestUnit(test1) {
+        std::cout<<"ExampleGroup"<<std::endl;
     }
-}
-
+GroupEnd(ExampleGroup)
 

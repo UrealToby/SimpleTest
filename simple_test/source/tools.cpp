@@ -13,7 +13,6 @@ std::string getGroupNameFromPath(const std::string& fileName){
 #warning No test group root directory is defined, and by default, all test files are in the same directory with no duplicate unit names. It is recommended to display the definition Group, or place it under the namespace.
 
 std::string getGroupNameFromPath(const std::string &fileName) {
-    std::cout<<fileName;
     auto first = fileName.find_last_of('/');
     if (first >= fileName.size()) {
         first = 0;

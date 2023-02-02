@@ -6,5 +6,5 @@
 #define SIMPLETEST_SIMPLE_TEST_H
 
 #include "../simple_test/include/tester.h"
-
+#include "../simple_test/include/assertion.h"
 #endif //SIMPLETEST_SIMPLE_TEST_H

@@ -6,7 +6,13 @@
 #define MEOWTEST_TEST_UNIT_H
 #include <stdexcept>
 
-using UnitFunc = std::function<void()>;
+#define UnitTestFuncParams UnitTestContext& context
+class UnitTestContext{
+public:
+    int expectCount = 0;
+    int expectErrCount = 0;
+};
+using UnitFunc = std::function<void(UnitTestFuncParams)>;
 
 enum class UnitType {
     throwWhenErr,
@@ -27,9 +33,6 @@ public:
             describe{std::move(describe)}, type{type} {
     }
 
-    void operator()() const{
-        unitCall();
-    }
 
     UnitFunc unitCall;
     std::string name;
@@ -44,7 +47,7 @@ public:
     std::string describe;
     std::list<TestUnit> units;
     void setDescribe(std::string desc=""){
-        describe = desc;
+        describe = std::move(desc);
     }
 };
 

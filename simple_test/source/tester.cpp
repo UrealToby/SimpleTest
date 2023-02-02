@@ -7,6 +7,7 @@
 
 #include "../include/tester.h"
 #include <chrono>
+#include "../include/assertion.h"
 int main() {
     for (const auto &group: allGroups) {
         test_group(group.second);
@@ -18,7 +19,7 @@ void test_group(const TestUnitGroup &group) {
     if (!group.describe.empty())
         std::cout << "\033[1;37m" << "\"\"\"\n" << group.describe << "\n\"\"\"" << "\033[39m" << std::endl;
 
-    TestStateUnits state{.count=group.units.size()};
+    GroupTestContext state{.count=group.units.size()};
     for (auto unit: group.units) {
         if (test_unit(unit, state)) {
             state.successCount++;
@@ -32,27 +33,34 @@ void test_group(const TestUnitGroup &group) {
         std::cout << "\033[1;32mAll Units Success!\033[39m\n"<<std::endl;
         return;
     }
-    std::cout << "\033[1;31m"<< "[" << state.successCount << "/" << state.count << "]" << "Units Success!\033[39m\n"<<std::endl;
+    std::cout << "\033[1;31m" << state.successCount << "/" << state.count << " Units Passed the Test!\033[39m\n"<<std::endl;
 }
 
-bool test_unit(const TestUnit &unit, TestStateUnits state) {
-    std::cout << "[" << state.idx << "/" << state.count << "]: " << "\033[1;34m" << unit.name << "\033[39m";
+bool test_unit(const TestUnit &unit, GroupTestContext state) {
+    std::cout << "[" << state.idx+1 << "/" << state.count << "]: " << "\033[1;34m" << unit.name << "\033[39m";
 
     if (!unit.describe.empty())
         std::cout << "\033[1;37m(" << unit.describe << ")\033[39m";
-    std::cout << std::endl;
+    std::cout << std::endl << "\033[1;33m";
+
+    UnitTestContext context{};
 
     auto time_begin = std::chrono::system_clock::now();
     try {
-        unit();
+        unit.unitCall(context);
     }
-    catch (std::exception& e) {
+    catch (AssertException& e){
         auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
         std::cout << "\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
-
+        return false;
+    }
+    catch (std::exception& e) {
         if (unit.type == UnitType::throwWhenErr) {
             throw _VA_LIST_DEFINED;
         }
+        auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
+        std::cout << "\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+
 
         return false;
     }
@@ -67,7 +75,11 @@ bool test_unit(const TestUnit &unit, TestStateUnits state) {
         return false;
     }
     auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-    std::cout << "\033[1;32mSuccess!\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+    std::cout << "\033[1;32mSuccess!";
+    if (context.expectErrCount>0){
+        std::cout<<"with "<<context.expectErrCount<<" unexpected problems.";
+    }
+    std::cout<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
     return true;
 }
 

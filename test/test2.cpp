@@ -1,5 +1,3 @@
-#define GroupRoot "/home/toby/Documents/CLionProjects/"
-
 #include "../include/simple_test.h"
 
 Group(ExampleGroup)

@@ -5,13 +5,10 @@
 #ifndef MEOWTEST_TESTER_H
 #define MEOWTEST_TESTER_H
 
-#include <iostream>
 #include <functional>
-#include <string>
 #include <map>
-#include <stdexcept>
-#include <list>
-#include <utility>
+
+
 #include "test_unit.h"
 #include "tools.h"
 

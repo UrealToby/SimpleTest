@@ -6,7 +6,10 @@
 #define MEOWTEST_TESTER_CPP
 
 #include "../include/tester.h"
+
 #include <chrono>
+#include <iostream>
+
 #include "../include/assertion.h"
 
 void rewritable test_group(const TestUnitGroup &group) {

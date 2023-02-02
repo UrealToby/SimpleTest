@@ -18,14 +18,10 @@
 inline TestUnitGroup currentGroup;
 inline std::map<std::string, TestUnitGroup> allGroups;
 
-class rewritable AddTestUnitAutoRun {
-public:
+struct AddTestUnitAutoRun {
     // This function is called when add test unit.
-    AddTestUnitAutoRun(UnitFunc call,
-                       const std::string &filepath,
-                       std::string name,
-                       std::string describe = std::string(),
-                       UnitType type = UnitType::continueWhenErr);
+    rewritable AddTestUnitAutoRun(UnitFunc call, const std::string &filepath, std::string name,
+                                  std::string describe = std::string(), UnitType type = UnitType::continueWhenErr);
 };
 
 
@@ -34,20 +30,13 @@ void TestUnit##UNIT_NAME(UnitTestFuncParams);              \
 static AddTestUnitAutoRun add##UNIT_NAME##UnitAutoRun(&TestUnit##UNIT_NAME,__FILE__,#UNIT_NAME,##__VA_ARGS__); \
 void TestUnit##UNIT_NAME(UnitTestFuncParams)
 
-class rewritable SetGroupAutoRun {
-public:
+struct SetGroupAutoRun {
     // This function is called when add Group.
-    explicit SetGroupAutoRun(std::string name, std::string describe = "") {
-        std::cout<<name;
-        currentGroup = TestUnitGroup{std::move(name), std::move(describe)};
-    }
+    explicit rewritable SetGroupAutoRun(std::string name, std::string describe = "");
 };
 
-class rewritable PushCurrentGroupAutoRun {
-public:
-    explicit PushCurrentGroupAutoRun(const std::string &name) {
-        allGroups[name] = currentGroup;
-    }
+struct PushCurrentGroupAutoRun {
+    explicit rewritable PushCurrentGroupAutoRun(const std::string &name);
 };
 
 
@@ -58,7 +47,7 @@ static SetGroupAutoRun Set##name##GroupAutoRun(#name,##__VA_ARGS__); \
 
 #define GroupEnd(name) static PushCurrentGroupAutoRun push##name##GroupAutoRun(#name);};
 
-class rewritable GroupTestContext{
+class rewritable GroupTestContext {
 public:
     size_t idx = 0;
     size_t count = 0;

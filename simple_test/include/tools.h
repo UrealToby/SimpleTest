@@ -7,9 +7,15 @@
 
 #include "string"
 
+#if defined(__clang__) || defined(__GNUC__)
 #define rewritable  __attribute__((weak))
+#else
+#warning msvc and others do not allow rewriting
+#define rewritable
+#endif
+
 #define rewrite
-#define autorun static __attribute__((constructor)) void
+
 
 
 std::string getGroupNameFromPath(const std::string &fileName);

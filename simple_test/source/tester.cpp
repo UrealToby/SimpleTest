@@ -15,7 +15,7 @@ void rewritable test_group(const TestUnitGroup &group) {
         std::cout << "\033[1;37m" << "\"\"\"\n" << group.describe << "\n\"\"\"" << "\033[39m" << std::endl;
 
     GroupTestContext state{.count=group.units.size()};
-    for (const auto& unit: group.units) {
+    for (const auto &unit: group.units) {
         if (test_unit(unit, state)) {
             state.successCount++;
             state.idx++;
@@ -24,15 +24,16 @@ void rewritable test_group(const TestUnitGroup &group) {
         state.idx++;
     }
 
-    if (state.successCount == state.count){
-        std::cout << "\033[1;32mAll Units Success!\033[39m\n"<<std::endl;
+    if (state.successCount == state.count) {
+        std::cout << "\033[1;32mAll Units Success!\033[39m\n" << std::endl;
         return;
     }
-    std::cout << "\033[1;31m" << state.successCount << "/" << state.count << " Units Passed the Test!\033[39m\n"<<std::endl;
+    std::cout << "\033[1;31m" << state.successCount << "/" << state.count << " Units Passed the Test!\033[39m\n"
+              << std::endl;
 }
 
 bool rewritable test_unit(const TestUnit &unit, GroupTestContext state) {
-    std::cout << "[" << state.idx+1 << "/" << state.count << "]: " << "\033[1;34m" << unit.name << "\033[39m";
+    std::cout << "[" << state.idx + 1 << "/" << state.count << "]: " << "\033[1;34m" << unit.name << "\033[39m";
 
     if (!unit.describe.empty())
         std::cout << "\033[1;37m(" << unit.describe << ")\033[39m";
@@ -44,24 +45,30 @@ bool rewritable test_unit(const TestUnit &unit, GroupTestContext state) {
     try {
         unit.unitCall(context);
     }
-    catch (AssertException& e){
-        auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-        std::cout << "\n\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+    catch (AssertException &e) {
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+                std::chrono::system_clock::now() - time_begin);
+        std::cout << "\n\033[1;31mError: " << e.what() << "\033[39m(" << double(duration.count()) * 1 / 1000000
+                  << "s)\n" << std::endl;
         return false;
     }
-    catch (std::exception& e) {
+    catch (std::exception &e) {
         if (unit.type == UnitType::throwWhenErr) {
             throw _VA_LIST_DEFINED;
         }
-        auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-        std::cout << "\n\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+                std::chrono::system_clock::now() - time_begin);
+        std::cout << "\n\033[1;31mError: " << e.what() << "\033[39m(" << double(duration.count()) * 1 / 1000000
+                  << "s)\n" << std::endl;
 
 
         return false;
     }
     catch (...) {
-        auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
-        std::cout << "\n\033[1;31mErr!Unknown exception.\033[39m"<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+                std::chrono::system_clock::now() - time_begin);
+        std::cout << "\n\033[1;31mErr!Unknown exception.\033[39m" << double(duration.count()) * 1 / 1000000 << "s)\n"
+                  << std::endl;
 
         if (unit.type == UnitType::throwWhenErr) {
             throw _VA_LIST_DEFINED;
@@ -69,12 +76,13 @@ bool rewritable test_unit(const TestUnit &unit, GroupTestContext state) {
 
         return false;
     }
-    auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+            std::chrono::system_clock::now() - time_begin);
     std::cout << "\n\033[1;32mSuccess!";
-    if (context.expectErrCount>0){
-        std::cout<<"with "<<context.expectErrCount<<" unexpected problems.";
+    if (context.expectErrCount > 0) {
+        std::cout << "with " << context.expectErrCount << " unexpected problems.";
     }
-    std::cout<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
+    std::cout << "\033[39m(" << double(duration.count()) * 1 / 1000000 << "s)\n" << std::endl;
     return true;
 }
 
@@ -87,7 +95,7 @@ rewritable int main() {
 
 #endif //MEOWTEST_TESTER_CPP
 
-AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::string &filepath, std::string name,
+rewritable AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::string &filepath, std::string name,
                                        std::string describe, UnitType type) {
     TestUnit unit{std::move(call), std::move(name), std::move(describe), type};
     if (currentGroup.name.empty()) {
@@ -96,4 +104,13 @@ AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::string &filepat
         allGroups[group_name].units.push_back(unit);
         return;
     } else currentGroup.units.push_back(unit);
+}
+
+rewritable SetGroupAutoRun::SetGroupAutoRun(std::string name, std::string describe) {
+    std::cout << name;
+    currentGroup = TestUnitGroup{std::move(name), std::move(describe)};
+}
+
+PushCurrentGroupAutoRun::PushCurrentGroupAutoRun(const std::string &name) {
+    allGroups[name] = currentGroup;
 }

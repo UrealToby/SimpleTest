@@ -7,15 +7,9 @@
 
 #include "string"
 
-#define AutoRun(name, body)         \
-static class AutoRun##name{         \
-public:                             \
-    AutoRun##name()                 \
-    {                               \
-        body;                       \
-    }                               \
-} autoRun##name
-#define CurrentGroup currentGroupName(__FILE__)
+#define rewritable  __attribute__((weak))
+#define autorun static __attribute__((constructor)) void
+
 std::string getGroupNameFromPath(const std::string &fileName);
 
 std::string currentGroupName(const std::string &fileName);

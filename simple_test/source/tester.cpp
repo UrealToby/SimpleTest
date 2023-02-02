@@ -9,24 +9,13 @@
 #include <chrono>
 #include "../include/assertion.h"
 
-#define rewritable  __attribute__((weak))
-
-#define TEST_ALL() \
-rewritable int main() {        \
-    for (const auto &group: allGroups) {        \
-        test_group(group.second);               \
-    }                                           \
-}
-
-TEST_ALL()
-
 void rewritable test_group(const TestUnitGroup &group) {
     std::cout << "\033[34mTesting group: " << group.name << "\033[39m" << std::endl;
     if (!group.describe.empty())
         std::cout << "\033[1;37m" << "\"\"\"\n" << group.describe << "\n\"\"\"" << "\033[39m" << std::endl;
 
     GroupTestContext state{.count=group.units.size()};
-    for (auto unit: group.units) {
+    for (const auto& unit: group.units) {
         if (test_unit(unit, state)) {
             state.successCount++;
             state.idx++;
@@ -89,4 +78,21 @@ bool rewritable test_unit(const TestUnit &unit, GroupTestContext state) {
     return true;
 }
 
+rewritable int main() {
+    for (const auto &group: allGroups) {
+        test_group(group.second);
+    }
+}
+
+
 #endif //MEOWTEST_TESTER_CPP
+
+AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::string &filepath, std::string name,
+                                       std::string describe, UnitType type) {
+    TestUnit unit{std::move(call), std::move(name), std::move(describe), type};
+    if (currentGroup.name.empty()) {
+        auto group_name = getGroupNameFromPath(filepath);
+        allGroups["group_name"].units.push_back(unit);
+        return;
+    } else currentGroup.units.push_back(unit);
+}

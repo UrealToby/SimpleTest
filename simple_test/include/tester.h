@@ -20,20 +20,14 @@ inline TestUnitGroup currentGroup;
 //inline std::string customGroupDescribe;
 inline std::map<std::string, TestUnitGroup> allGroups;
 
-class AddTestUnitAutoRun {
+class  AddTestUnitAutoRun {
 public:
-    AddTestUnitAutoRun(UnitFunc call,
+    // This function is called when add test unit.
+    rewritable AddTestUnitAutoRun(UnitFunc call,
                        const std::string &filepath,
                        std::string name,
                        std::string describe = std::string(),
-                       UnitType type = UnitType::continueWhenErr) {
-        TestUnit unit{std::move(call), std::move(name), std::move(describe), type};
-        if (currentGroup.name.empty()) {
-            auto group_name = getGroupNameFromPath(filepath);
-            allGroups["group_name"].units.push_back(unit);
-            return;
-        } else currentGroup.units.push_back(unit);
-    }
+                       UnitType type = UnitType::continueWhenErr);
 };
 
 
@@ -44,14 +38,15 @@ void TestUnit##UNIT_NAME(UnitTestFuncParams)
 
 class SetGroupAutoRun {
 public:
-    explicit SetGroupAutoRun(std::string name, std::string describe = "") {
+    // This function is called when add Group.
+    rewritable explicit SetGroupAutoRun(std::string name, std::string describe = "") {
         currentGroup = TestUnitGroup{std::move(name), std::move(describe)};
     }
 };
 
 class PushCurrentGroupAutoRun {
 public:
-    explicit PushCurrentGroupAutoRun(const std::string &name) {
+    rewritable explicit PushCurrentGroupAutoRun(const std::string &name) {
         allGroups[name] = currentGroup;
     }
 };
@@ -71,10 +66,13 @@ public:
     size_t successCount = 0;
 };
 
+// Rewritable
 void test_group(const TestUnitGroup &group);
 
+// Rewritable
 bool test_unit(const TestUnit &unit, GroupTestContext state);
 
+// Rewritable, If you need to customize the test main function entry, just redefine it.
 int main();
 
 #endif //MEOWTEST_TESTER_H

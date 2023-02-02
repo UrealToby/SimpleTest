@@ -24,9 +24,12 @@ public:
 
 #define EXPECT(stmt, whenErr)           \
 context.expectCount+=1;                 \
-if(stmt){}                              \
-else                                    \
+if(!(stmt))                             \
     context.expectErrCount+=1,whenErr   \
+
+
+#define EXPECT_ERR(msg) EXPECT(stmt,std::cout << msg << std::endl)
+#define ASSERT_ERR(msg) EXPECT(stmt,throw AssertException(msg))
 
 #define EXPECT_COMPARE(left, right, sign) EXPECT((left) sign (right),std::cout << "Assert "<< #left << " " << #sign<< " " << #right << " fail!" << std::endl)
 #define ASSERT_COMPARE(left, right, sign) EXPECT((left) sign (right),throw AssertException(std::string("Assert ")+ #left + " " + #sign+ " " + #right + " fail!"))
@@ -49,13 +52,13 @@ else                                    \
 #define EXPECT_LE(left, right) EXPECT_COMPARE(left,right,<=)
 #define ASSERT_LE(left, right) ASSERT_COMPARE(left,right,<=)
 
+#define EXPECT_IS(left, right) EXPECT(&left == &right,std::cout << "Assert "<< #left << " is " << #right << " fail!" << std::endl)
+#define ASSERT_IS(left, right) EXPECT(&left == &right,throw AssertException(std::string("Assert ")+ #left + " is " + #right + " fail!"))
+
 #define EXPECT_TRUE(stmt) EXPECT(stmt,std::cout << "Assert "<< #stmt << " == true fail!" << std::endl)
 #define ASSERT_TRUE(stmt) EXPECT(stmt,throw AssertException(std::string("Assert ")+ #stmt + " == true fail!"))
 
 #define EXPECT_FALSE(stmt) EXPECT(stmt,std::cout << "Assert "<< #stmt << " != true fail!" << std::endl)
 #define ASSERT_FALSE(stmt) EXPECT(stmt,throw AssertException(std::string("Assert ")+ #stmt + " != true fail!"))
-
-#define EXPECT_ERR(msg) EXPECT(stmt,std::cout << msg << std::endl)
-#define ASSERT_ERR(msg) EXPECT(stmt,throw AssertException(msg))
 
 #endif //SIMPLETEST_ASSERTION_H

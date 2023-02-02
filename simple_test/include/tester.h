@@ -47,7 +47,7 @@ static SetGroupAutoRun Set##name##GroupAutoRun(#name,##__VA_ARGS__); \
 
 #define GroupEnd(name) static PushCurrentGroupAutoRun push##name##GroupAutoRun(#name);};
 
-class rewritable GroupTestContext {
+struct GroupTestContext {
 public:
     size_t idx = 0;
     size_t count = 0;

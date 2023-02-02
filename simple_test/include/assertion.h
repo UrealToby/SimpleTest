@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <utility>
 
+#include <iostream>
+
 class AssertException : std::exception {
 public:
     std::string message;

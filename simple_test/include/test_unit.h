@@ -5,6 +5,7 @@
 #ifndef MEOWTEST_TEST_UNIT_H
 #define MEOWTEST_TEST_UNIT_H
 #include <stdexcept>
+#include <list>
 
 #define UnitTestFuncParams UnitTestContext& context
 class UnitTestContext{

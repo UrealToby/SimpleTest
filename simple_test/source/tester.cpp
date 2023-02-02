@@ -6,7 +6,7 @@
 #define MEOWTEST_TESTER_CPP
 
 #include "../include/tester.h"
-
+#include <chrono>
 int main() {
     for (const auto &group: allGroups) {
         test_group(group.second);
@@ -42,11 +42,13 @@ bool test_unit(const TestUnit &unit, TestStateUnits state) {
         std::cout << "\033[1;37m(" << unit.describe << ")\033[39m";
     std::cout << std::endl;
 
+    auto time_begin = std::chrono::system_clock::now();
     try {
         unit();
     }
     catch (std::exception& e) {
-        std::cout << "\033[1;31mError: "<<e.what()<<"\033[39m\n"<<std::endl;
+        auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
+        std::cout << "\033[1;31mError: "<<e.what()<<"\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
 
         if (unit.type == UnitType::throwWhenErr) {
             throw _VA_LIST_DEFINED;
@@ -55,7 +57,8 @@ bool test_unit(const TestUnit &unit, TestStateUnits state) {
         return false;
     }
     catch (...) {
-        std::cout << "\033[1;31mErr!Unknown exception.\033[39m\n"<<std::endl;
+        auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
+        std::cout << "\033[1;31mErr!Unknown exception.\033[39m"<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
 
         if (unit.type == UnitType::throwWhenErr) {
             throw _VA_LIST_DEFINED;
@@ -63,8 +66,8 @@ bool test_unit(const TestUnit &unit, TestStateUnits state) {
 
         return false;
     }
-
-    std::cout << "\033[1;32mSuccess!\033[39m\n"<<std::endl;
+    auto duration =  std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_begin);
+    std::cout << "\033[1;32mSuccess!\033[39m("<<double(duration.count()) * 1 / 1000000 <<"s)\n"<<std::endl;
     return true;
 }
 

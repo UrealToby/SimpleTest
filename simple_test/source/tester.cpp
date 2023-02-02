@@ -110,7 +110,6 @@ rewritable AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::stri
 }
 
 rewritable SetGroupAutoRun::SetGroupAutoRun(std::string name, std::string describe) {
-    std::cout << name;
     currentGroup = TestUnitGroup{std::move(name), std::move(describe)};
 }
 

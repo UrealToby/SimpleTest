@@ -8,7 +8,9 @@
 #include "string"
 
 #define rewritable  __attribute__((weak))
+#define rewrite
 #define autorun static __attribute__((constructor)) void
+
 
 std::string getGroupNameFromPath(const std::string &fileName);
 

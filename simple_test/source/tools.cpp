@@ -13,6 +13,7 @@ std::string getGroupNameFromPath(const std::string& fileName){
 #warning No test group root directory is defined, by default all test files are in the same directory and there are no renames
 
 std::string getGroupNameFromPath(const std::string &fileName) {
+    std::cout<<fileName;
     auto first = fileName.find_last_of('/');
     if (first >= fileName.size()) {
         first = 0;

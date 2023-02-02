@@ -92,7 +92,8 @@ AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::string &filepat
     TestUnit unit{std::move(call), std::move(name), std::move(describe), type};
     if (currentGroup.name.empty()) {
         auto group_name = getGroupNameFromPath(filepath);
-        allGroups["group_name"].units.push_back(unit);
+        allGroups[group_name].name = group_name;
+        allGroups[group_name].units.push_back(unit);
         return;
     } else currentGroup.units.push_back(unit);
 }

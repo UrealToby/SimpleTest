@@ -16,14 +16,12 @@
 #include "tools.h"
 
 inline TestUnitGroup currentGroup;
-//inline std::string customGroup;
-//inline std::string customGroupDescribe;
 inline std::map<std::string, TestUnitGroup> allGroups;
 
-class  AddTestUnitAutoRun {
+class rewritable AddTestUnitAutoRun {
 public:
     // This function is called when add test unit.
-    rewritable AddTestUnitAutoRun(UnitFunc call,
+    AddTestUnitAutoRun(UnitFunc call,
                        const std::string &filepath,
                        std::string name,
                        std::string describe = std::string(),
@@ -36,30 +34,31 @@ void TestUnit##UNIT_NAME(UnitTestFuncParams);              \
 static AddTestUnitAutoRun add##UNIT_NAME##UnitAutoRun(&TestUnit##UNIT_NAME,__FILE__,#UNIT_NAME,##__VA_ARGS__); \
 void TestUnit##UNIT_NAME(UnitTestFuncParams)
 
-class SetGroupAutoRun {
+class rewritable SetGroupAutoRun {
 public:
     // This function is called when add Group.
-    rewritable explicit SetGroupAutoRun(std::string name, std::string describe = "") {
+    explicit SetGroupAutoRun(std::string name, std::string describe = "") {
+        std::cout<<name;
         currentGroup = TestUnitGroup{std::move(name), std::move(describe)};
     }
 };
 
-class PushCurrentGroupAutoRun {
+class rewritable PushCurrentGroupAutoRun {
 public:
-    rewritable explicit PushCurrentGroupAutoRun(const std::string &name) {
+    explicit PushCurrentGroupAutoRun(const std::string &name) {
         allGroups[name] = currentGroup;
     }
 };
 
 
 #define Group(name, ...) \
-extern TestUnitGroup currentGroup; \
+namespace name{ \
+TestUnitGroup currentGroup; \
 static SetGroupAutoRun Set##name##GroupAutoRun(#name,##__VA_ARGS__); \
-namespace name{
 
 #define GroupEnd(name) static PushCurrentGroupAutoRun push##name##GroupAutoRun(#name);};
 
-class GroupTestContext {
+class rewritable GroupTestContext{
 public:
     size_t idx = 0;
     size_t count = 0;

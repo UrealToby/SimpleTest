@@ -15,9 +15,9 @@ public:                             \
         body;                       \
     }                               \
 } autoRun##name
-#define CurrentGroup currentGroup(__FILE__)
+#define CurrentGroup currentGroupName(__FILE__)
 std::string getGroupNameFromPath(const std::string &fileName);
 
-std::string currentGroup(const std::string &fileName);
+std::string currentGroupName(const std::string &fileName);
 
 #endif //MEOWTEST_TOOLS_H

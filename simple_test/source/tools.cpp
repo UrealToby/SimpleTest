@@ -22,13 +22,5 @@ std::string getGroupNameFromPath(const std::string &fileName) {
     return fileName.substr(first, fileName.find_first_of('.') - first);
 }
 
-std::string currentGroup(const std::string &fileName) {
-    extern std::string customGroup;
-    if (customGroup.empty()) {
-        return getGroupNameFromPath(fileName);
-    }
-    return customGroup;
-}
-
 #endif
 

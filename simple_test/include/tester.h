@@ -39,7 +39,6 @@ struct PushCurrentGroupAutoRun {
 
 #define Group(name, ...) \
 namespace name{ \
-TestUnitGroup currentGroup; \
 static SetGroupAutoRun Set##name##GroupAutoRun(#name,##__VA_ARGS__); \
 
 #define GroupEnd(name) static PushCurrentGroupAutoRun push##name##GroupAutoRun(#name);};

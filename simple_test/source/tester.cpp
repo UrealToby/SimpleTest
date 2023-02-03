@@ -111,6 +111,7 @@ rewritable AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::stri
 
 rewritable SetGroupAutoRun::SetGroupAutoRun(std::string name, std::string describe) {
     currentGroup = TestUnitGroup{std::move(name), std::move(describe)};
+    currentGroup = TestUnitGroup{};
 }
 
 PushCurrentGroupAutoRun::PushCurrentGroupAutoRun(const std::string &name) {

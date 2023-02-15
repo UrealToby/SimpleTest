@@ -10,16 +10,15 @@
 #if defined(__clang__) || defined(__GNUC__)
 #define rewritable  __attribute__((weak))
 #else
-#warning msvc and others do not allow rewriting
+#warning msvc and others may do not allow rewriting
 #define rewritable
 #endif
 
-#define rewrite
-
-
-
+#ifdef GROUP_BASE
 std::string getGroupNameFromPath(const std::string &fileName);
-
+#else
+std::string getGroupNameFromPath(const std::string &fileName,const std::string& base={});
+#endif
 std::string currentGroupName(const std::string &fileName);
 
 #endif //MEOWTEST_TOOLS_H

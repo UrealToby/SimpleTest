@@ -4,15 +4,13 @@
 #include <iostream>
 #include "../include/tools.h"
 
-#ifdef GroupRoot
-std::string getGroupNameFromPath(const std::string& fileName){
-    auto first = std::string(GroupRoot).size();
-    return fileName.substr(first,fileName.find_first_of('.')-first);
-}
-#else
-#warning No test group root directory is defined, and by default, all test files are in the same directory with no duplicate unit names. It is recommended to display the definition Group, or place it under the namespace.
+std::string getGroupNameFromPath(const std::string &fileName,const std::string& base) {
+    if (!base.empty()){
+        auto first = std::string(base).size();
+        return fileName.substr(first,fileName.find_first_of('.')-first);
+    }
 
-std::string getGroupNameFromPath(const std::string &fileName) {
+    // 如果没有定义base则将文件名作为group name
     auto first = fileName.find_last_of('/');
     if (first >= fileName.size()) {
         first = 0;
@@ -21,6 +19,4 @@ std::string getGroupNameFromPath(const std::string &fileName) {
     }
     return fileName.substr(first, fileName.find_first_of('.') - first);
 }
-
-#endif
 

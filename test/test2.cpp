@@ -1,6 +1,8 @@
-#include "../include/simple_test.h"
+#include "simple_test.h"
 
-Group(A)
-
-GroupEnd(A)
+Group(Affff)
+AddTestUnit(test222){
+    std::cout<<"hello"<<std::endl;
+}
+GroupEnd()
 

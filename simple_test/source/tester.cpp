@@ -100,6 +100,7 @@ rewritable int main() {
 
 rewritable AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::string &filepath, std::string name,
                                        std::string describe, UnitType type) {
+//    std::cout<<"Add Unit "<<name<<std::endl;
     TestUnit unit{std::move(call), std::move(name), std::move(describe), type};
     if (currentGroup.name.empty()) {
         auto group_name = getGroupNameFromPath(filepath);
@@ -110,10 +111,12 @@ rewritable AddTestUnitAutoRun::AddTestUnitAutoRun(UnitFunc call, const std::stri
 }
 
 rewritable SetGroupAutoRun::SetGroupAutoRun(std::string name, std::string describe) {
+//    std::cout<<"Add Group "<<name<<std::endl;
     currentGroup = TestUnitGroup{std::move(name), std::move(describe)};
-    currentGroup = TestUnitGroup{};
 }
 
-PushCurrentGroupAutoRun::PushCurrentGroupAutoRun(const std::string &name) {
-    allGroups[name] = currentGroup;
+PushCurrentGroupAutoRun::PushCurrentGroupAutoRun() {
+//    std::cout<<"End Group "<<currentGroup.name<<std::endl;
+    allGroups[currentGroup.name] = currentGroup;
+    currentGroup = {};
 }

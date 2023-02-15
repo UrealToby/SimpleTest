@@ -29,19 +29,19 @@ void TestUnit##UNIT_NAME(UnitTestFuncParams)
 
 struct SetGroupAutoRun {
     // This function is called when add Group.
-    explicit rewritable SetGroupAutoRun(std::string name, std::string describe = "");
+    explicit SetGroupAutoRun(std::string name, std::string describe = "");
 };
 
 struct PushCurrentGroupAutoRun {
-    explicit rewritable PushCurrentGroupAutoRun(const std::string &name);
+    explicit PushCurrentGroupAutoRun();
 };
 
 
 #define Group(name, ...) \
-namespace name{ \
-static SetGroupAutoRun Set##name##GroupAutoRun(#name,##__VA_ARGS__); \
+namespace name{                         \
+static SetGroupAutoRun Set##name##GroupAutoRun{#name,##__VA_ARGS__}; \
 
-#define GroupEnd(name) static PushCurrentGroupAutoRun push##name##GroupAutoRun(#name);};
+#define GroupEnd() static PushCurrentGroupAutoRun pushGroupAutoRun;};
 
 struct GroupTestContext {
 public:
